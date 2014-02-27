@@ -2,17 +2,12 @@
 
 ## Description
 
-Add your plugin description here.
-
-## FAQ
-
-__My question?__
-My answer
-
-## Changelog
-
-Here goes the changelog text.
+This plugin allow you display report with number of visits in even and uneven days
 
 ## Support
 
-Please direct any feedback to ...
+If you have any question please feel free to contact with me:
+
+wojciech.dasiukiewicz@gmail.com
+or
+wojtek@ninjacode.pl

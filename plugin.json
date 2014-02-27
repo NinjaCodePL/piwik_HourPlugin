@@ -1,0 +1,13 @@
+{
+ "name": "Hours",
+ "version": "1.0.0",
+ "description": "Plugin wyświetla ilość wejść w dni parzyste/nieparzyste",
+ "theme": false,
+ "authors": [
+     {
+         "name": "Wojciech Dasiukiewicz",
+         "email": "wojciech.dasiukiewicz@gmail.com",
+         "homepage": "http://www.ninjacode.pl"
+     }
+ ]
+}
