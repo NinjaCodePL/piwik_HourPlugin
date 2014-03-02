@@ -26,7 +26,7 @@ class API extends \Piwik\Plugin\API {
         //Ustawiam zmienne zliczające godziny parzyste/nieparzyste
         $even = 0;
         $uneven = 0;
-        
+
         foreach ($data->getRows() as $visitRow) {
             //Pobieram czas w jakim dokonane zostało odpowiedzenie strony
             //w formacie 00:00:00
