@@ -27,7 +27,7 @@ class Hours extends \Piwik\Plugin {
     }
 
     //Dodaję kolumnę oznaczającą w jakiej godzinie (parzysta lub nie) 
-    //użytkownik został zanotowany w bazie w momencie instalacji plugina
+    //użytkownik został zanotowany w bazie w momencie instalacji plugin
     public function install() {
         $query = "ALTER IGNORE TABLE `" . Common::prefixTable('log_visit') . "` ADD `hour_even` INT(1) NULL";
         try {
