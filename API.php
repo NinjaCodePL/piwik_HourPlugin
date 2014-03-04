@@ -10,6 +10,15 @@
 
 namespace Piwik\Plugins\Hours;
 
+use Piwik\Archive;
+use Piwik\Metrics;
+use Piwik\Piwik;
+
+/**
+ * @see plugins/UserSettings/functions.php
+ */
+require_once PIWIK_INCLUDE_PATH . '/plugins/UserSettings/functions.php';
+
 /**
  * API for plugin Hours
  *
@@ -17,41 +26,19 @@ namespace Piwik\Plugins\Hours;
  */
 class API extends \Piwik\Plugin\API {
 
-    public function getLastVisitsByTime($idSite, $period, $date, $segment = false) {
-        //Pobieram dane na temat odwiedzających
-        $data = \Piwik\Plugins\Live\API::getInstance()->getLastVisitsDetails(
-                $idSite, $period, $date, $segment, $minTimestamp = false, $flat = false, $doNotFetchActions = true
-        );
-        $result = $data->getEmptyClone($keepFilters = false);
-        //Ustawiam zmienne zliczające godziny parzyste/nieparzyste
-        $even = 0;
-        $uneven = 0;
+    protected function getDataTable($name, $idSite, $period, $date, $segment) {
+        Piwik::checkUserHasViewAccess($idSite);
+        $archive = Archive::build($idSite, $period, $date, $segment);
+        $dataTable = $archive->getDataTable($name);
+         $dataTable->filter('Sort', array(Metrics::INDEX_NB_VISITS));
+          $dataTable->queueFilter('ReplaceColumnNames');
+          $dataTable->queueFilter('ReplaceSummaryRowLabel'); 
+        return $dataTable;
+    }
 
-        foreach ($data->getRows() as $visitRow) {
-            //Pobieram czas w jakim dokonane zostało odpowiedzenie strony
-            //w formacie 00:00:00
-            $visitorTime = $visitRow->getColumn('visitor_localtime');
-            //Wyciągam godzinę $time[0]
-            $time = explode(":", $visitorTime);
-            //Jeśli godzina jest parzysta inkrementuję zmienną $even
-            //w innym wypadku zmienną $uneven
-            if ($time[0] % 2 == 0) {
-                $even++;
-            } else {
-                $uneven++;
-            }
-        }
-        //Dodaję rekordy do rezultatu
-        $result->addRowFromSimpleArray(array(
-            'label' => "Even",
-            'nb_visits' => $even
-        ));
-        $result->addRowFromSimpleArray(array(
-            'label' => "Uneven",
-            'nb_visits' => $uneven
-        ));
-        //Zwracam rezultat
-        return $result;
+    public function getTime($idSite, $period, $date, $segment = false) {
+        $dataTable = $this->getDataTable(Archiver::CONFIGURATION_RECORD_NAME, $idSite, $period, $date, $segment);
+        return $dataTable;
     }
 
 }

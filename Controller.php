@@ -19,11 +19,11 @@ class Controller extends \Piwik\Plugin\Controller {
 
     public function index() {
         $view = new View("@Hours/index.twig");
-        $view->getLastVisitsByTime = $this->getLastVisitsByTime(true);
+        $view->getLastVisitsByTime = $this->getTime(true);
         echo $view->render();
     }
 
-    public function getLastVisitsByTime() {
+    public function getTime() {
         return $this->renderReport(__FUNCTION__);
     }
 }
