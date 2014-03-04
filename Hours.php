@@ -27,12 +27,21 @@ class Hours extends \Piwik\Plugin {
     }
 
     //Dodaję kolumnę oznaczającą w jakiej godzinie (parzysta lub nie) 
-    //użytkownik został zanotowany w bazie
+    //użytkownik został zanotowany w bazie w momencie instalacji plugina
     public function install() {
-        // add column hostname / hostname ext in the visit table
         $query = "ALTER IGNORE TABLE `" . Common::prefixTable('log_visit') . "` ADD `hour_even` INT(1) NULL";
-
-        // if the column already exist do not throw error. Could be installed twice...
+        try {
+            Db::exec($query);
+        } catch (Exception $e) {
+            if (!Db::get()->isErrNo($e, '1060')) {
+                throw $e;
+            }
+        }
+    }
+    //Usuwam kolumnę oznaczającą w jakiej godzinie (parzysta lub nie) 
+    //użytkownik został zanotowany w bazie w momencie usunięcia plugina
+    public function uninstall(){
+        $query = "ALTER IGNORE TABLE `" . Common::prefixTable('log_visit') . "` DROP CLOUMN `hour_even`";
         try {
             Db::exec($query);
         } catch (Exception $e) {
